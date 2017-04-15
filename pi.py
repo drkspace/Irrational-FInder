@@ -3,6 +3,7 @@ from decimal import *
 ZERO = Decimal('0')
 ONE = Decimal('1')
 TWO = Decimal('2')
+THREE = Decimal('3')
 NEG_ONE = Decimal('-1')
 TEN = Decimal('10')
 
@@ -16,7 +17,7 @@ class pi(object):
 
 	def Leibniz(self):
 
-		getcontext().prec = self.accuracy+3
+		getcontext().prec = self.accuracy+4
 		magnatude=TEN**(NEG_ONE*(self.accuracy+1))
 
 		sum = ZERO
@@ -39,7 +40,7 @@ class pi(object):
 			if count % TEN**TWO == 0:
 				print "{}/{}".format(count,terms)
 
-		return (sum*Decimal('4')).quantize(magnatude)#, ROUND_HALF_UP)
+		return (sum*Decimal('4')).quantize(Decimal(".0001"))#, ROUND_HALF_UP)
 
 
 	def Madhava_Leibniz(self):
@@ -71,9 +72,34 @@ class pi(object):
 	    #return (a*sum).quantize(Decimal('.1')**(Decimal(self.accuracy)), rounding=ROUND_HALF_UP), remainder**Decimal(-1)*a
 	    return (a*sum).quantize(Decimal('.00000000001'), rounding=ROUND_HALF_UP), remainder**Decimal(-1)*a
 	   # return a*sum, (remainder**Decimal(-1))*a
+
+	def Smith(self):
+                getcontext().prec = self.accuracy+4
+		magnatude=TEN**(NEG_ONE*(self.accuracy+1))
+
+		terms=ONE/magnatude
+		terms/=(TWO*TWO)
+
+		count=ZERO
+
+		while terms>((TWO*count**THREE)+(THREE*count**TWO)+count):
+                        count += ONE
+                print count
+
+                asum = ZERO
+		i=ONE
+		while i < count:
+                        asum+= (NEG_ONE**(i+ONE))/(Decimal('4')*i*((TWO*i**TWO)+(THREE*i)+ONE))
+                        i+=ONE
+
+                        if i % TEN**TWO == 0:
+				print "{}/{}".format(count,count)
+				
+		return (asum*Decimal('4')+THREE).quantize(magnatude*TEN, ROUND_HALF_UP)
 	
 	def __str__(self):
 		return str(self.pi)
 		
-p=pi(accuracy = 2)
-print p.Leibniz()
+p=pi(accuracy = 100)
+#print p.Leibniz()
+print p.Smith()
